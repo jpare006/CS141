@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import profile
+from math import sqrt
 
 # Command line arguments
 parser=argparse.ArgumentParser(description='Calculate the nearest two points on a plan')
@@ -25,18 +26,53 @@ def divideAndConquerNearestNeighbor(points):
     return (minimum_distance,point1,point2)
 #end def divide_and_conquer(points):
 
+#=================================================================================================
 #Brute force version of the nearest neighbor algorithm
 #Input: points := unsorted array of (x,y) coordinates 
 #   [(x,y),(x,y),...,(x,y)]
 #Output: tuple of smallest distance and coordinates (distance,(x1,y1),(x2,y2))
 def bruteForceNearestNeighbor(points):
     minimum_distance = 0;
+    distance = 0;
     point1 = (-1,-1)
     point2 = (-1,-1)
     #TODO: Complete this function
+
+    for num in range(0, len(points)):
+        for nestedNum in range(num + 1, len(points)):
+
+            #find distance between point at index num and nestedNum
+            #first set up points to perform distance calculation
+            tmp_point1 = (points[num][0], points[num][1])
+            tmp_point2 = (points[nestedNum][0], points[nestedNum][1])
+
+            distance = sqrt(((tmp_point1[0] - tmp_point2[0])**2) + ((tmp_point1[1] - tmp_point2[1])**2))
+            
+            if num == 0 and nestedNum == 1: # this means that it is the first distance calculated
+                minimum_distance = distance
+            else:
+                if distance < minimum_distance:
+                    minimum_distance = distance
+                    point1 = (tmp_point1[0], tmp_point1[1])
+                    point2 = (tmp_point2[0], tmp_point2[1])
+                    #print("The new min distance is " + str(minimum_distance))
+                    #print("Using points " + str(point1) + " and " + str(point2))
+                #end if
+            #end if-else
+        #end nested for
+    #end for
+            #print(point1)
+            #print(nestedNum, end = " ")
+        #print("\n")
+    print("The following is the minimum distance: " + str(minimum_distance))
+
     print("Brute force algorithm is incomplete")
     return (minimum_distance,point1,point2)
 #end def brute_force_nearest_neighbor(points):
+#================================================================================================
+
+
+
 
 #Parse the input file
 #Input: filename := string of the name of the test case
