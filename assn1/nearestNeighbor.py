@@ -75,7 +75,7 @@ def divideAndConquerNearestNeighbor(points):
         if point[0] < midpoint - minimum_distance[0] or point[0] > midpoint + minimum_distance[0]:
             del(point)
     borderMinDist = bruteForce(points)
-    
+    points.sort()
     #print("Divide and Conquer algorithm is incomplete")
     if minimum_distance[0] <= borderMinDist[0]:
         #print("The following is the minimum distance: " + str(minimum_distance[0]))
@@ -100,7 +100,7 @@ def bruteForceNearestNeighbor(points):
     point1 = (-1,-1)
     point2 = (-1,-1)
     #TODO: Complete this function
-
+    points.sort()
     for num in range(0, len(points)):
         for nestedNum in range(num + 1, len(points)):
             #code used to keep track of progress (made algorithm take significantly longer)
