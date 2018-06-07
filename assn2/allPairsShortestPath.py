@@ -19,14 +19,73 @@ vertices=[]
 edges=[]
 
 def BellmanFord(G):
-    pathPairs=[]
-    # TODO: Fill in your Bellman-Ford algorithm here
-    print('BellmanFord algorithm is incomplete')
     # The pathPairs list will contain the 2D array of shortest paths between all pairs of vertices 
     # [[w(1,1),w(1,2),...]
     #  [w(2,1),w(2,2),...]
     #  [w(3,1),w(3,2),...]
     #   ...]
+    pathPairs = []
+    tmpPathPairs = []
+    numNodes = len(G[0])
+    nodeEdges = []
+    nodeIterator = []
+
+    for z in range(numNodes):
+        startNode = G[0][z]
+        #set up a list to iterate over all nodes with a specific starting point that isn't always 0
+        del nodeIterator[:]
+        for i in G[0][startNode:]:
+            nodeIterator.append(i)
+        if startNode != 0:
+            for i in G[0][:startNode]:
+                nodeIterator.append(i)
+    
+        #Initialize tmpPathPairs to infinity
+        del tmpPathPairs[:]
+        for i in range(numNodes):
+            tmpPathPairs.append(float("inf"))
+
+        #Set distance for node being analyzed to zero since the distance from 
+        #a node to itself is 0
+        tmpPathPairs[startNode] = 0
+
+        for i in range(numNodes): #iterate numNodes - 1 times
+            for j in nodeIterator: #once per node
+
+                #Current node must have a value already otherwise go to next node
+                if tmpPathPairs[j] != float("inf"):
+                    #Get location of edges and save in nodeEdges[]
+                    del nodeEdges[:]
+                    for k in range(numNodes):
+                        if G[1][j][k] != float("inf"):
+                            nodeEdges.append(k)
+
+
+                    #for every edge a node has, visit it and update its distance from the start node
+                    #print("For node " + str(j + 1) + " we are using edges ")
+                    for edge in nodeEdges:
+                        #print(str(edge + 1))
+                        #if current node value + weight to sink < value of sink
+                        if (tmpPathPairs[j] + float(G[1][j][edge])) < float(tmpPathPairs[edge]):
+                            tmpPathPairs[edge] = int(tmpPathPairs[j] + float(G[1][j][edge]))
+            if i == numNodes - 1:
+                pathPairs.append(tmpPathPairs[:])
+            #end for
+        #end for
+
+    #end for loop
+
+    #Implement Bellman Ford Algo for single node, node 0
+    
+
+
+    #for i in range(numNodes):
+    #    cnt = 0
+    #    for j in range(numNodes):
+    #        if float(G[1][i][j]) < float("inf"):
+    #            cnt += 1     
+    #    print("node " + str(i + 1) + " has " + str(cnt) + " edges\n")
+
     return pathPairs
 
 def FloydWarshall(G):
