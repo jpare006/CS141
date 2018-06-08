@@ -75,28 +75,45 @@ def BellmanFord(G):
 
     #end for loop
 
-    #Implement Bellman Ford Algo for single node, node 0
-    
-
-
-    #for i in range(numNodes):
-    #    cnt = 0
-    #    for j in range(numNodes):
-    #        if float(G[1][i][j]) < float("inf"):
-    #            cnt += 1     
-    #    print("node " + str(i + 1) + " has " + str(cnt) + " edges\n")
-
     return pathPairs
 
 def FloydWarshall(G):
-    pathPairs=[]
     # TODO: Fill in your Floyd-Warshall algorithm here
-    print('FloydWarshall algorithm is incomplete')
     # The pathPairs list will contain the 2D array of shortest paths between all pairs of vertices 
     # [[w(1,1),w(1,2),...]
     #  [w(2,1),w(2,2),...]
     #  [w(3,1),w(3,2),...]
     #   ...]
+    pathPairs=[]
+    nodeEdges = []
+    
+    #get number of nodes
+    numNodes = len(vertices)
+    numEdges = len(edges)
+
+    #initialize 2D array to "inf"
+    for i in range(numNodes):
+        pathPairs.append([float("inf")] * numNodes)
+
+    #set distance to 0 for each node that travels to itself
+    for i in range(numNodes):
+        pathPairs[i][i] = 0
+
+    for i in range(numNodes):
+        for j in range(numNodes):
+            if float(G[1][i][j]) != float("inf"):
+                pathPairs[i][j] = G[1][i][j]
+
+    for i in range(numNodes):
+        for j in range(numNodes):
+            for k in range(numNodes):
+                if (pathPairs[j][k] != float("inf")) and (pathPairs[j][i] != float("inf")) and (pathPairs[i][k] != float("inf")):
+                    if int(pathPairs[j][k]) > int(pathPairs[j][i]) + int(pathPairs[i][k]):
+                        pathPairs[j][k] = int(int(pathPairs[j][i]) + int(pathPairs[i][k])) 
+                elif (pathPairs[j][k] == float("inf")) and (pathPairs[j][i] != float("inf")) and (pathPairs[i][k] != float("inf")):
+                        pathPairs[j][k] = int(pathPairs[j][i]) + int(pathPairs[i][k]) 
+
+
     return pathPairs
 
 def readFile(filename):
@@ -150,14 +167,30 @@ def main(filename,algorithm):
     # in the format ((source,sink),weight)
     if algorithm == 'b' or algorithm == 'B':
         # TODO: Insert timing code here
+        t0 = time.time()
         pathPairs = BellmanFord(G)
+        t1 = time.time()
+        print("Time elapased BellmanFord is: " + str(t1 - t0))
+        print("Result: ")
+
     if algorithm == 'f' or algorithm == 'F':
         # TODO: Insert timing code here
+        t0 = time.time()
         pathPairs = FloydWarshall(G)
+        t1 = time.time()
+        print("Time elapased FloydWarshall is: " + str(t1 - t0))
+        print("Result: ")
+
     if algorithm == 'a':
         print('running both') 
+        t0 = time.time()
         pathPairsBellman = BellmanFord(G)
+        t1 = time.time()
+        print("BellmanFord: " + str(t1 - t0))
+        t0 = time.time()
         pathPairsFloyd = FloydWarshall(G)
+        t1 = time.time()
+        print("FloydWarshal: " + str(t1 - t0))
         pathPairs = pathPairsBellman
         if matrixEquality(pathPairsBellman,pathPairsFloyd):
             print('Floyd-Warshall and Bellman-Ford did not produce the same result')
